@@ -10,6 +10,7 @@ import { check } from 'meteor/check';
 
 // Collection imports
 import DocumentationFiles from '/apinf_packages/api_docs/files/collection';
+import ApiDocs from '/apinf_packages/api_docs/collection';
 
 Meteor.publish(
   'singleDocumentationFile', (fileId) => {
@@ -26,3 +27,11 @@ Meteor.publish(
       },
     });
   });
+
+Meteor.publish('apiIdsWithDocumentation', () => {
+  // Get ApiIds for all ApiDocuments
+  const apiIds = ApiDocs.find({}, { fields: { apiId: 1 } });
+
+  // Return database cursor or empty array
+  return apiIds || [];
+});
