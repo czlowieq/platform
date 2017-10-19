@@ -94,7 +94,7 @@ Template.medianResponseTime.onRendered(function () {
       // Create Labels values
       const currentDateValue = moment(value.key).format(params.format);
       const index = labels.indexOf(currentDateValue);
-      data[index] = parseInt(value.percentiles_response_time.values['50.0'], 10);
+      data[index] = parseInt(value.median_response_time.values['50.0'], 10);
     });
 
     // Update labels & data

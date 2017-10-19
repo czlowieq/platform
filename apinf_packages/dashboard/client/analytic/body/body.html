@@ -4,29 +4,54 @@ You may obtain a copy of the licence at
 https://joinup.ec.europa.eu/community/eupl/og_page/european-union-public-licence-eupl-v11 -->
 
 <template name="apiAnalyticPageBody">
-  <!-- Data is not ready -->
-  {{# unless fetchingData }}
-    {{> spinner }}
-  {{ else }}
-    <!-- If error returns -->
-    {{# if error }}
-      <h1>
-        {{_ 'apiAnalyticPageBody_text_elasticsearchError' }}
-      </h1>
-      <p>
-        {{ error }}
-      </p>
-    {{/ if }}
+    <!--&lt;!&ndash; Request path has metrics data &ndash;&gt;-->
+    <!--{{# if elasticsearchData }}-->
+      <!--{{# if dataAvailable }}-->
+        <!--{{> apiAnalyticView elasticsearchData=elasticsearchData proxyBackendId=proxyBackendId-->
+        <!--overviewChartData=overviewChartData totalNumberData=totalNumberData timelineChartsData=timelineChartsData-->
+        <!--statusCodesData=statusCodesData frequentUsersData=frequentUsersData errorsStatisticData=errorsStatisticData}}-->
+      <!--{{ else }}-->
+        <!--<p class="alert alert-warning text-center overview-col-title">-->
+          <!--{{_ 'apiAnalyticPageBody_warningText_noData' }}-->
+        <!--</p>-->
+      <!--{{/ if }}-->
+    <!--{{/ if }}-->
+  {{> chartItem totalNumberData=totalNumberData proxyBackendId=proxyBackendId statusCodesData=statusCodesData overviewChartData=overviewChartData }}
+</template>
 
-    <!-- Request path has metrics data -->
-    {{# if elasticsearchData }}
-      {{# if dataAvailable }}
-        {{> apiAnalyticView elasticsearchData=elasticsearchData proxyBackendId=proxyBackendId }}
-      {{ else }}
-        <p class="alert alert-warning text-center overview-col-title">
-          {{_ 'apiAnalyticPageBody_warningText_noData' }}
-        </p>
-      {{/ if }}
-    {{/ if }}
-  {{/ unless }} <!-- /fetchingData -->
+<template name="chartItem">
+  <div data-overview-id="{{ proxyBackendId }}">
+    <div class="col-xs-12 col-md-4">
+    <div class="api-view-card form-group">
+      <p class="overview-col-title">
+        {{# if totalNumberBucket }}
+          {{_ 'apiAnalyticView_text_requestsCount' count=totalNumberBucket.requestNumber }}
+        {{ else }}
+          {{_ 'apiAnalyticView_text_requestsCount' count=0 }}
+        {{/ if }}
+      </p>
+      <p class="overview-col-title">
+        {{_ 'apiAnalyticView_chartTitle_apiRequests' }}
+      </p>
+      <div class="form-group">
+        {{# if overviewChartBucket }}
+          {{> requestsOverTime buckets=overviewChartBucket proxyBackendId=proxyBackendId }}
+        {{ else }}
+          {{> spinner }}
+        {{/ if }}
+      </div>
+
+      <!-- response status list-->
+      <div class="row">
+        <span class="text-success col-xs-6 col-md-3">
+          {{# if responseStatusCodes }}
+            2XX: {{ responseStatusCodes.successCallsCount }}
+          {{ else }}
+            2XX: 0
+          {{/ if }}
+        </span>
+      </div>
+    </div>
+  </div>
+  </div>
 </template>
